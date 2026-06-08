@@ -11,9 +11,10 @@ Zbadanie zwiazku miedzy dochodami wlasnymi a wydatkami inwestycyjnymi oraz powon
 Zrodlo: https://bdl.stat.gov.pl/bdl/dane/podgrup/temat
 
 | Zmienna                        | Opis                                   |
-| Dochody własne                 | Łączne dochody własne gminy [zł]       |
-| Wydatki majątkowe inwestycyjne | Wydatki na inwestycje [zł]             |
-| Ludność                        | Stan na 31 grudnia danego roku [osoby] |
+|--------------------------------|----------------------------------------|
+| Dochody wlasne                 | Laczne dochody wlasne gminy [zł]       |
+| Wydatki majatkowe inwestycyjne | Wydatki na inwestycje [zł]             |
+| Ludnosc                        | Stan na 31 grudnia danego roku [osoby] |
 
 - Liczba gmin w probie: 2 578
 - Zakres czasowy: 2015–2022
@@ -24,6 +25,7 @@ Zrodlo: https://bdl.stat.gov.pl/bdl/dane/podgrup/temat
 ### Zroznicowanie wg typu gmny (srednia 2015-2022)
 
 | Typ gminy       | Wydatki inwest. pc [PLN] | Dochody wlasne pc [PLN] |
+|-----------------|--------------------------|-------------------------|
 | miejska         | 812,69                   | 2 888,35                |
 | miejsko-wiejska | 791,58                   | 2 171,98                |
 | wiejska         | 863,58                   | 1 944,36                |
