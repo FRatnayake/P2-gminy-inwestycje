@@ -61,3 +61,54 @@ for r in range(2015, 2023):
 print(df.shape)
 print(df['typ'].value_counts())
 print(df.head(3))
+
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+import os
+
+os.makedirs('wykresy', exist_ok=True)
+
+#statystki opisowe
+
+for zm in ['dochody_pc', 'wydatki_pc']:
+    kolumny = [f'{zm}_{r}' for r in range(2015, 2023)]
+    df[f'{zm}_srednia'] = df[kolumny].mean(axis=1)
+
+print("\n--- Statystyki opisowe ---")
+print(df[['dochody_pc_srednia', 'wydatki_pc_srednia']].describe().round(2))
+
+#wykres: trend avg wydatkow inwestycyjnych per capita 
+fig, ax = plt.subplots(figsize=(10, 6))
+
+for typ in ['miejska', 'miejsko-wiejska', 'wiejska']:
+    podzb = df[df['typ'] == typ]
+    srednie = [podzb[f'wydatki_pc_{r}'].mean() for r in range(2015, 2023)]
+    ax.plot(range(2015, 2023), srednie, marker='o', label=typ)
+
+ax.set_title('Średnie wydatki inwestycyjne per capita wg typu gminy (2015–2022)')
+ax.set_xlabel('Rok')
+ax.set_ylabel('PLN per capita')
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('wykresy/trend_wydatki_typ.png', dpi=150)
+plt.close()
+print("Zapisano: wykresy/trend_wydatki_typ.png")
+
+#wykres: boxplot wydatkow inwestycyjnych per capita w 2022 w typu gminy
+fig, ax = plt.subplots(figsize=(9, 6))
+
+dane_box = [
+    df[df['typ'] == typ]['wydatki_pc_2022'].dropna().values
+    for typ in ['miejska', 'miejsko-wiejska', 'wiejska']
+]
+ax.boxplot(dane_box, labels=['miejska', 'miejsko-wiejska', 'wiejska'], showfliers=False)
+ax.set_title('Rozkład wydatków inwestycyjnych per capita w 2022 r. wg typu gminy')
+ax.set_xlabel('Typ gminy')
+ax.set_ylabel('PLN per capita')
+ax.grid(True, alpha=0.3, axis='y')
+plt.tight_layout()
+plt.savefig('wykresy/boxplot_wydatki_2022.png', dpi=150)
+plt.close()
+print("Zapisano: wykresy/boxplot_wydatki_2022.png")
