@@ -112,3 +112,62 @@ plt.tight_layout()
 plt.savefig('wykresy/boxplot_wydatki_2022.png', dpi=150)
 plt.close()
 print("Zapisano: wykresy/boxplot_wydatki_2022.png")
+
+import numpy as np
+
+#wykres: scatter, dochody vs wydatki per capita (2022)
+
+fig, ax = plt.subplots(figsize=(10, 7))
+
+kolory = {'miejska': '#e74c3c', 'miejsko-wiejska': '#f39c12', 'wiejska': '#2ecc71'}
+
+for typ, kolor in kolory.items():
+    pozdb = df[df['typ'] == typ]
+    ax.scatter(
+        pozdb['dochody_pc_2022'],
+        pozdb['wydatki_pc_2022'],
+        alpha=0.4, s=15, color=kolor, label=typ
+    )
+    
+#linia trendu dla calosci
+
+x = df['dochody_pc_2022'].dropna()
+y = df['dochody_pc_2022'].dropna()
+wspolny = df[['dochody_pc_2022', 'wydatki_pc_2022']].dropna()
+z = np.polyfit(wspolny['dochody_pc_2022'], wspolny['wydatki_pc_2022'], 1)
+p = np.poly1d(z)
+x_linia = np.linspace(wspolny['dochody_pc_2022'].min(), wspolny['dochody_pc_2022'].max(), 200)
+ax.plot(x_linia, p(x_linia), 'k--', linewidth=1.2, label='trend liniowy')
+
+ax.set_title('Dochody własne a wydatki inwestycyjne per capita (2022)')
+ax.set_xlabel('Dochody własne per capita [PLN]')
+ax.set_ylabel('Wydatki inwestycyjne per capita [PLN]')
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('wykresy/scatter_dochody_wydatki_2022.png', dpi=150)
+plt.close()
+print("Zapisano: wykresy/scatter_dochody_wydatki_2022.png")
+
+#wykres: korelacja Pearsona dochody v wydatki per capitawg roku
+
+korelacje = []
+for r in range(2015, 2023):
+    wspolny = df[[f'dochody_pc_{r}', f'wydatki_pc_{r}']].dropna()
+    r_pearson = wspolny[f'dochody_pc_{r}'].corr(wspolny[f'wydatki_pc_{r}'])
+    korelacje.append(r_pearson)
+
+fig, ax = plt.subplots(figsize=(9, 5))
+ax.bar(range(2015, 2023), korelacje, color='steelblue', edgecolor='white')
+ax.set_title('Korelacja Pearsona: dochody własne vs wydatki inwestycyjne per capita')
+ax.set_xlabel('Rok')
+ax.set_ylabel('Współczynnik korelacji Pearsona (r)')
+ax.set_ylim(0, 1)
+ax.set_xticks(range(2015, 2023))
+ax.grid(True, alpha=0.3, axis='y')
+for i, v in enumerate(korelacje):
+    ax.text(2015 + i, v + 0.01, f'{v:.2f}', ha='center', fontsize=9)
+plt.tight_layout()
+plt.savefig('wykresy/korelacja_roczna.png', dpi=150)
+plt.close()
+print("Zapisano: wykresy/korelacja_roczna.png")
