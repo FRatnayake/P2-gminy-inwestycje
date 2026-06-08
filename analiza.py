@@ -171,3 +171,34 @@ plt.tight_layout()
 plt.savefig('wykresy/korelacja_roczna.png', dpi=150)
 plt.close()
 print("Zapisano: wykresy/korelacja_roczna.png")
+
+#top 10 gmin o najwyzszych srednich wydatkach inwestycyjnych per capita
+top10 = (
+    df[['nazwa', 'typ', 'wydatki_pc_srednia', 'dochody_pc_srednia']]
+    .sort_values('wydatki_pc_srednia', ascending=False)
+    .head(10)
+    .reset_index(drop=True)
+)
+top10.index += 1
+print("\n--- Top 10 gmin: najwyższe średnie wydatki inwestycyjne per capita (2015–2022) ---")
+print(top10.to_string())
+
+#top 10 gmin o najnizszych srednich wydatkach per capita
+bottom10 = (
+    df[['nazwa', 'typ', 'wydatki_pc_srednia', 'dochody_pc_srednia']]
+    .sort_values('wydatki_pc_srednia', ascending=True)
+    .head(10)
+    .reset_index(drop=True)
+)
+bottom10.index += 1
+print("\n--- Bottom 10 gmin: najniższe średnie wydatki inwestycyjne per capita (2015–2022) ---")
+print(bottom10.to_string())
+
+#podsumowanie wg typu gminy
+print("\n--- Średnie wartości wg typu gminy (2015–2022) ---")
+podsumowanie = df.groupby('typ')[['wydatki_pc_srednia', 'dochody_pc_srednia']].mean().round(2)
+print(podsumowanie.to_string())
+
+#zapis przetworzonego zbioru danych
+df.to_csv('dane/gminy_przetworzone.csv', index=False, sep=';')
+print("\nZapisano: dane/gminy_przetworzone.csv")
